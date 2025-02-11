@@ -3,6 +3,7 @@ from backend.app.core.security import (
     get_password_hash,
     verify_password,
     create_access_token,
+    decode_jwt_token
 )
 from backend.app.settings import settings
 
@@ -16,6 +17,12 @@ def test_create_access_token():
     expires_delta = timedelta(minutes=20)
     token = create_access_token(subject, expires_delta)
     assert token
+
+def test_decode_jwt_token():
+    subject = "testuser"
+    expires_delta = timedelta(minutes=20)
+    token = create_access_token(subject, expires_delta)
+    assert subject == decode_jwt_token(token)["sub"]
 
 def test_verify_password():
     password = "testpassword"
