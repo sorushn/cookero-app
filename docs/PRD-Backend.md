@@ -30,14 +30,14 @@ The data model should be based on the following JSON schema:
 
 ## APIs
 The app should have the following APIs:
-1. Sign up
-2. Sign in
-3. Create a recipe
-4. Read a recipe
-5. Update a recipe
-6. Delete a recipe
-7. List all recipes
-8. List recipes by ingredients
+[x] Sign up
+[x] Sign in
+[] Create a recipe
+[] Read a recipe
+[] Update a recipe
+[] Delete a recipe
+[] List all recipes
+[] List recipes by ingredients
 
 ## Non-Functional Requirements
 1. The app should be fast and responsive.
