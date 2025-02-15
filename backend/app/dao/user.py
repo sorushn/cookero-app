@@ -29,7 +29,7 @@ class AuthDAO:
         }
         payload["token"] = create_access_token(payload)
 
-        records, summary, keys = driver.execute_query(
+        driver.execute_query(
             """
             MERGE (u:User {email: $email})
             SET u.name = $name
@@ -40,8 +40,6 @@ class AuthDAO:
             name=payload["name"],
             password=payload["password"]
         )
-        print("TEST")
-        print(records, summary, keys)
         return payload
     # end::register[]
     

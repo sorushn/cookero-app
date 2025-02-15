@@ -1,13 +1,17 @@
 # PRD for Backend
 
 ## Overview
+
 The backend of Cookero-app is built using FastAPI. It should be a RESTful API that allows for creating, reading, updating, and deleting recipes.
 
 ## Product Goals
+
 Initial plan is self-use through a web browser. Future plans include mobile app and desktop app.
 
 ## Data Model
+
 The data model should be based on the following JSON schema:
+
 ```json
 {
     "id": int,
@@ -23,12 +27,14 @@ The data model should be based on the following JSON schema:
 ```
 
 ## Functional Requirements
+
 1. The app should allow for multiple users to have their own personal recipes, plans, and shopping lists.
 2. A user shoudl be able to create, edit, and delete recipes.
 3. A user should be able to view the ingredients for a recipe.
 4. A user should be able to view the instructions for a recipe.
 
 ## APIs
+
 The app should have the following APIs:
 [x] Sign up
 [x] Sign in
@@ -40,6 +46,7 @@ The app should have the following APIs:
 [] List recipes by ingredients
 
 ## Non-Functional Requirements
+
 1. The app should be fast and responsive.
 2. The app should be secure.
 3. The app should be easy to use.
@@ -49,6 +56,7 @@ The app should have the following APIs:
 7. The app should be easy to test.
 
 ## Success Metrics and KPIs
+
 1. Number of users
 2. Number of recipes
 3. Number of plans
@@ -61,6 +69,7 @@ The app should have the following APIs:
 10. Time to list recipes by ingredients
 
 ## Roadmap
+
 1. Create simple backend with support for User Authentication and CRUD for recipes.
 2. add support for indicating ingredients in recipes
 3. add support for reverse recipe search based on ingredients
