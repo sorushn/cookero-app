@@ -1,7 +1,8 @@
 from uuid import uuid4
-
+from loguru import logger
 from backend.app.core.db import get_session, driver
 from backend.app.core.security import create_access_token, get_password_hash, verify_password, decode_jwt_token
+from backend.app.schemas.user import UserCreate
 
 class AuthDAO:
     """
@@ -19,29 +20,45 @@ class AuthDAO:
     The properties also be used to generate a JWT `token` which should be included
     with the returned user.
     """
-    # tag::register[]
-    def register(self, email: str, plain_password: str, name: str) -> dict:
-        encrypted_password = get_password_hash(plain_password)
-        payload = {
-            "email": email,
-            "name": name,
-            "password": encrypted_password
-        }
-        payload["token"] = create_access_token(payload)
+    def register(self, request: UserCreate) -> dict:
+        encrypted_password = get_password_hash(request.password)
 
-        driver.execute_query(
-            """
-            MERGE (u:User {email: $email})
-            SET u.name = $name
-            SET u.password = $password
-            RETURN u
-            """,
-            email=payload["email"],
-            name=payload["name"],
-            password=payload["password"]
-        )
-        return payload
-    # end::register[]
+        try:
+            # First check if user exists
+            records, _, _ = driver.execute_query(
+                """
+                MATCH (u:User {email: $email}) 
+                RETURN u
+                """,
+                email=request.email
+            )
+            
+            if records:
+                logger.error(f"User with email {request.email} already exists")
+                return {"error": "User with this email already exists"}
+
+            # If no user exists, create new one
+            records, _, _ = driver.execute_query(
+                """
+                CREATE (u:User {
+                    email: $email,
+                    name: $name,
+                    password: $password,
+                    id: $id
+                })
+                RETURN u
+                """,
+                email=request.email,
+                name=request.name,
+                password=encrypted_password,
+                id=str(uuid4())
+            )
+            logger.debug(f"Successfully registered user with email {request.email}")
+            return records
+
+        except Exception as e:
+            logger.error(f"Error registering user: {str(e)}")
+            return {"error": str(e)}
     
     """
     This method should attempt to find a user by the email address provided
