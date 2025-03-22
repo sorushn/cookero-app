@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
-from backend.app.dao.user import AuthDAO
+from backend.app.dao.user import authdao
 from backend.app.settings import settings
 
 auth_router = APIRouter()
@@ -17,7 +17,7 @@ class LoginRequest(BaseModel):
 
 @auth_router.post("/register")
 def register(request: RegisterRequest) -> dict:
-    dao = AuthDAO()
+    dao = authdao
     dao.register(request)
     token = dao.authenticate(request.email, request.password)
     if token is None:
@@ -26,7 +26,7 @@ def register(request: RegisterRequest) -> dict:
 
 @auth_router.post("/login")
 def login(request: LoginRequest) -> dict:
-    dao = AuthDAO()
+    dao = authdao
     token = dao.authenticate(request.email, request.password)
     if token is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
