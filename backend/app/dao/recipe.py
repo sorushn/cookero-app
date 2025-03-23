@@ -59,8 +59,11 @@ class RecipeDAO:
                 """,
                 user_id=user_id
             )
+            if not records:
+                logger.debug(f"No recipes found for user with id {user_id}")
+                return []
             logger.debug(f"Successfully retrieved recipes for user with id {user_id}")
-            return records
+            return [record['r'] for record in records]
         except Exception as e:
             logger.error(f"Error retrieving recipes for user: {str(e)}")
             return {"error": str(e)}
