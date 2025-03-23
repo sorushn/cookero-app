@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
 from backend.app.dao.user import authdao
-from backend.app.settings import settings
 
 auth_router = APIRouter()
 

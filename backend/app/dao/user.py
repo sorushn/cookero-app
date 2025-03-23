@@ -79,4 +79,34 @@ class AuthDAO:
         except Exception as e:
             return {"error": str(e)}
 
+    def get_by_email(self, email: str) -> dict:
+        try:
+            records, summary, keys = driver.execute_query(
+                """
+                MATCH (u:User {email: $email}) RETURN u
+                """,
+                email=email,
+            )
+            if records:
+                return records[0]["u"]
+            else:
+                return {"error": "User not found"}
+        except Exception as e:
+            return {"error": str(e)}
+
+    def get_by_id(self, user_id: str) -> dict:
+        try:
+            records, summary, keys = driver.execute_query(
+                """
+                MATCH (u:User {id: $user_id}) RETURN u
+                """,
+                user_id=user_id,
+            )
+            if records:
+                return records[0]["u"]
+            else:
+                return {"error": "User not found"}
+        except Exception as e:
+            return {"error": str(e)}
+
 authdao = AuthDAO()
