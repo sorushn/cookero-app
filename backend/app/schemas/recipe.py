@@ -9,3 +9,6 @@ class RecipeCreate(RecipeBase):
 
 class RecipeUpdate(RecipeBase):
     id: str = Field(..., json_schema_extra={"example": "28f24e1a-f56a-431d-8155-195948bf32b1"})
+
+class RecipeCreateResponse(RecipeCreate):
+    id: str = Field(..., json_schema_extra={"example": "28f24e1a-f56a-431d-8155-195948bf32b1"})

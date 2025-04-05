@@ -102,4 +102,24 @@ class RecipeDAO:
             logger.error(f"Error retrieving recipe: {str(e)}")
             return {"error": str(e)}
 
+    def get_by_user_and_id(self, user_id: str, id: str):
+        try:
+            records, _, _ = driver.execute_query(
+                """
+                MATCH (r:Recipe {id: $id})
+                WHERE r.user_id = $user_id
+                RETURN r
+                """,
+                id=id,
+                user_id=user_id
+            )
+            if records:
+                logger.debug(f"Successfully retrieved recipe with id {id}")
+                return records[0]['r']
+            else:
+                return {"error": "Recipe not found"}
+        except Exception as e:
+            logger.error(f"Error retrieving recipe: {str(e)}")
+            return {"error": str(e)}
+
 recipeDAO = RecipeDAO()
