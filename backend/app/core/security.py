@@ -16,14 +16,14 @@ def create_access_token(
     subject: Union[str, Any], expires_delta: timedelta = timedelta(minutes=EXPIRE_MINUTES)
 ) -> str:
     expire = datetime.now(timezone.utc) + expires_delta
-    to_encode = {"exp": expire, "sub": str(subject)}
+    to_encode = {"exp": expire, "user_id": str(subject)}
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 def decode_jwt_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload["sub"]
+        return payload["user_id"]
     except jwt.ExpiredSignatureError:
         return None
     except jwt.InvalidTokenError:

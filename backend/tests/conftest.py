@@ -7,6 +7,8 @@ from backend.app.core.db import driver
 from backend.app.dao.user import authdao
 from backend.app.schemas.user import UserCreate
 from loguru import logger
+from backend.app.main import app
+from backend.app.dependencies.auth import get_current_user_id
 
 @pytest.fixture
 def settings():
@@ -19,20 +21,23 @@ def session(settings):
         session.run("MATCH (n) DETACH DELETE n")
 
 @pytest.fixture(scope="function")
-def db_user():
+def temp_user():
     user = {
         "email": "test@example.com",
         "password": "testpassword",
         "name": "Test User"
     }
-    db_user = authdao.register(UserCreate(**user))
+    yield user
+@pytest.fixture(scope="function")
+def db_user(temp_user):
+    db_user = authdao.register(UserCreate(**temp_user))
     if isinstance(db_user, dict) and "error" in db_user:
         logger.warning(f"Failed to register user: {db_user['error']}")
-        db_user = authdao.get_by_email(user["email"])
+        db_user = authdao.get_by_email(temp_user["email"])
         yield db_user
     else:
         yield db_user
-        driver.execute_query("MATCH (u:User {email: $email}) DETACH DELETE u", email=user["email"])
+        driver.execute_query("MATCH (u:User {email: $email}) DETACH DELETE u", email=temp_user["email"])
 
 @pytest.fixture(scope="function")
 def db_recipe(db_user):

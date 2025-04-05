@@ -16,6 +16,7 @@ dependencies = [
     "pyjwt>=2.8.0,<3.0.0",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.3",
+    "python-multipart>=0.0.20",
     "ruff>=0.9.4",
     "streamlit>=1.42.0",
 ]

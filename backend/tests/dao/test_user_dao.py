@@ -29,5 +29,5 @@ def test_register_duplicate_email(temp_user):
 def test_authenticate(temp_user):
     _ = authdao.register(UserCreate(email=temp_user["email"], password=temp_user["password"], name=temp_user["name"]))
     authenticate_payload = authdao.authenticate(temp_user["email"], temp_user["password"])
-    assert "token" in authenticate_payload
-    assert authenticate_payload["token"] is not None
+    assert "access_token" in authenticate_payload
+    assert authenticate_payload["access_token"] is not None

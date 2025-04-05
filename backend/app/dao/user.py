@@ -72,8 +72,8 @@ class AuthDAO:
                 user = records[0]["u"]
                 if not verify_password(plain_password, user["password"]):
                     return {"error": "Invalid email or password"}
-                token = create_access_token({"sub": user["id"]})
-                return {"token": token}
+                token = create_access_token(user["id"])
+                return {"access_token": token, "token_type": "bearer"}
             else:
                 return {"error": "Invalid email or password"}
         except Exception as e:

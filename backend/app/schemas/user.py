@@ -10,3 +10,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: str
     token: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
