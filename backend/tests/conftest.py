@@ -7,8 +7,6 @@ from backend.app.core.db import driver
 from backend.app.dao.user import authdao
 from backend.app.schemas.user import UserCreate
 from loguru import logger
-from backend.app.main import app
-from backend.app.dependencies.auth import get_current_user_id
 
 @pytest.fixture
 def settings():

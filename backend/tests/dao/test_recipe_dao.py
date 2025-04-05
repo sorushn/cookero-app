@@ -1,5 +1,3 @@
-import pytest
-from loguru import logger
 
 from backend.app.schemas.recipe import RecipeCreate
 from backend.app.dao.recipe import recipeDAO

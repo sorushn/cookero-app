@@ -1,9 +1,7 @@
 import pytest
-from loguru import logger
 
 from backend.app.schemas.user import UserCreate
 from backend.app.dao.user import authdao
-from backend.app.settings import settings
 from backend.app.core.db import driver
 
 @pytest.fixture
