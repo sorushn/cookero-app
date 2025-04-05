@@ -1,8 +1,13 @@
 from uuid import uuid4
 from loguru import logger
 from backend.app.core.db import driver
-from backend.app.core.security import create_access_token, get_password_hash, verify_password
+from backend.app.core.security import (
+    create_access_token,
+    get_password_hash,
+    verify_password,
+)
 from backend.app.schemas.user import UserCreate
+
 
 class AuthDAO:
     def register(self, request: UserCreate) -> dict:
@@ -15,9 +20,9 @@ class AuthDAO:
                 MATCH (u:User {email: $email}) 
                 RETURN u
                 """,
-                email=request.email
+                email=request.email,
             )
-            
+
             if records:
                 logger.error(f"User with email {request.email} already exists")
                 return {"error": "User with this email already exists"}
@@ -36,15 +41,15 @@ class AuthDAO:
                 email=request.email,
                 name=request.name,
                 password=encrypted_password,
-                id=str(uuid4())
+                id=str(uuid4()),
             )
             logger.debug(f"Successfully registered user with email {request.email}")
-            return records[0]['u']
+            return records[0]["u"]
 
         except Exception as e:
             logger.error(f"Error registering user: {str(e)}")
             return {"error": str(e)}
-    
+
     """
     This method should attempt to find a user by the email address provided
     and attempt to verify the password.
@@ -60,6 +65,7 @@ class AuthDAO:
       token: '...'
     }
     """
+
     def authenticate(self, email: str, plain_password: str) -> dict:
         try:
             records, summary, keys = driver.execute_query(
@@ -108,5 +114,6 @@ class AuthDAO:
                 return {"error": "User not found"}
         except Exception as e:
             return {"error": str(e)}
+
 
 authdao = AuthDAO()

@@ -7,6 +7,7 @@ from backend.app.dao.user import authdao
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+
 class TokenData(BaseModel):
     user_id: str
 
@@ -14,13 +15,13 @@ class TokenData(BaseModel):
 async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
     """
     Dependency to get the current user ID from a JWT token.
-    
+
     Args:
         token: JWT token extracted from the Authorization header
-        
+
     Returns:
         The user ID if the token is valid
-        
+
     Raises:
         HTTPException: If the token is invalid or expired
     """
@@ -37,13 +38,13 @@ async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
 async def get_current_user(user_id: str = Depends(get_current_user_id)):
     """
     Dependency to get the current user from the database.
-    
+
     Args:
         user_id: User ID extracted from the JWT token
-        
+
     Returns:
         The user details if the user exists
-        
+
     Raises:
         HTTPException: If the user does not exist
     """

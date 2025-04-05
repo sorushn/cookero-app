@@ -4,28 +4,56 @@ from backend.app.schemas.user import UserCreate
 from backend.app.dao.user import authdao
 from backend.app.core.db import driver
 
+
 @pytest.fixture
 def temp_user():
-    user = {
-        "email": "test@example.com",
-        "name": "Test",
-        "password": "password"
-    }
+    user = {"email": "test@example.com", "name": "Test", "password": "password"}
     yield user
-    driver.execute_query("MATCH (u:User {email: $email}) DETACH DELETE u", email=user["email"])
+    driver.execute_query(
+        "MATCH (u:User {email: $email}) DETACH DELETE u", email=user["email"]
+    )
+
 
 def test_register(temp_user):
-    records = authdao.register(UserCreate(email=temp_user["email"], password=temp_user["password"], name=temp_user["name"]))
-    assert records['email'] == temp_user["email"]
-    assert records['name'] == temp_user["name"]
+    records = authdao.register(
+        UserCreate(
+            email=temp_user["email"],
+            password=temp_user["password"],
+            name=temp_user["name"],
+        )
+    )
+    assert records["email"] == temp_user["email"]
+    assert records["name"] == temp_user["name"]
+
 
 def test_register_duplicate_email(temp_user):
-    _ = authdao.register(UserCreate(email=temp_user["email"], password=temp_user["password"], name=temp_user["name"]))
-    records = authdao.register(UserCreate(email=temp_user["email"], password=temp_user["password"], name=temp_user["name"]))
+    _ = authdao.register(
+        UserCreate(
+            email=temp_user["email"],
+            password=temp_user["password"],
+            name=temp_user["name"],
+        )
+    )
+    records = authdao.register(
+        UserCreate(
+            email=temp_user["email"],
+            password=temp_user["password"],
+            name=temp_user["name"],
+        )
+    )
     assert records["error"] == "User with this email already exists"
 
+
 def test_authenticate(temp_user):
-    _ = authdao.register(UserCreate(email=temp_user["email"], password=temp_user["password"], name=temp_user["name"]))
-    authenticate_payload = authdao.authenticate(temp_user["email"], temp_user["password"])
+    _ = authdao.register(
+        UserCreate(
+            email=temp_user["email"],
+            password=temp_user["password"],
+            name=temp_user["name"],
+        )
+    )
+    authenticate_payload = authdao.authenticate(
+        temp_user["email"], temp_user["password"]
+    )
     assert "access_token" in authenticate_payload
     assert authenticate_payload["access_token"] is not None

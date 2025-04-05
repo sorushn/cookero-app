@@ -8,9 +8,11 @@ from backend.app.dao.user import authdao
 from backend.app.schemas.user import UserCreate
 from loguru import logger
 
+
 @pytest.fixture
 def settings():
     return Settings("..//settings.ini")
+
 
 @pytest.fixture
 def session(settings):
@@ -18,14 +20,17 @@ def session(settings):
         yield session
         session.run("MATCH (n) DETACH DELETE n")
 
+
 @pytest.fixture(scope="function")
 def temp_user():
     user = {
         "email": "test@example.com",
         "password": "testpassword",
-        "name": "Test User"
+        "name": "Test User",
     }
     yield user
+
+
 @pytest.fixture(scope="function")
 def db_user(temp_user):
     db_user = authdao.register(UserCreate(**temp_user))
@@ -35,26 +40,32 @@ def db_user(temp_user):
         yield db_user
     else:
         yield db_user
-        driver.execute_query("MATCH (u:User {email: $email}) DETACH DELETE u", email=temp_user["email"])
+        driver.execute_query(
+            "MATCH (u:User {email: $email}) DETACH DELETE u", email=temp_user["email"]
+        )
+
 
 @pytest.fixture(scope="function")
 def db_recipe(db_user):
     recipe = {
         "name": "Test Recipe",
         "instructions": "Test Instructions",
-        "user_id": db_user["id"]
+        "user_id": db_user["id"],
     }
     recipe = recipeDAO.create(RecipeCreate(**recipe))
     logger.debug(recipe)
     yield recipe
     driver.execute_query("MATCH (r:Recipe {id: $id}) DETACH DELETE r", id=recipe["id"])
 
+
 @pytest.fixture(scope="function")
 def temp_recipe(db_user):
     recipe = {
         "name": "Test Recipe",
         "instructions": "Test Instructions",
-        "user_id": db_user["id"]
+        "user_id": db_user["id"],
     }
     yield recipe
-    driver.execute_query("MATCH (r:Recipe {name: $name}) DETACH DELETE r", name=recipe["name"])
+    driver.execute_query(
+        "MATCH (r:Recipe {name: $name}) DETACH DELETE r", name=recipe["name"]
+    )

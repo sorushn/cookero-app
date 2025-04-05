@@ -12,13 +12,16 @@ ALGORITHM = settings.get("security", "ALGORITHM")
 SECRET_KEY = settings.get("security", "SECRET_KEY")
 EXPIRE_MINUTES = int(settings.get("security", "EXPIRE_MINUTES"))
 
+
 def create_access_token(
-    subject: Union[str, Any], expires_delta: timedelta = timedelta(minutes=EXPIRE_MINUTES)
+    subject: Union[str, Any],
+    expires_delta: timedelta = timedelta(minutes=EXPIRE_MINUTES),
 ) -> str:
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode = {"exp": expire, "user_id": str(subject)}
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 def decode_jwt_token(token: str):
     try:
@@ -32,6 +35,7 @@ def decode_jwt_token(token: str):
 
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
+
 
 def get_password_hash(password: str):
     return pwd_context.hash(password)
